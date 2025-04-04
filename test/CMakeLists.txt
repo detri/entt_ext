@@ -30,4 +30,6 @@ add_executable(test_entt_ext
         $<BUILD_INTERFACE:${entt_ext_SOURCE_DIR}/test/src/system_tests.cpp>
 )
 
-target_link_libraries(test_entt_ext PRIVATE EnTT::EnTT entt_ext gtest_main)
+target_link_libraries(test_entt_ext
+        INTERFACE entt_ext::entt_ext
+        PRIVATE gtest_main)

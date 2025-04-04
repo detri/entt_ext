@@ -107,8 +107,10 @@ wherever needed, then query the children later with a different wrapper.
 ### Systems
 Systems take an alternate philosophy to `entt::process`.
 They are virtual classes with an overrideable `update` method which takes a `float`.
-Also, their constructor takes and stores a non-owning `entt::registry`.
-They assume the registry will always outlive them.
+The base constructor takes and stores a non-owning `entt::registry` pointer.
+They assume the registry will always outlive them. The advantage of this assumption is
+that systems can define and manage their own views and access registry context data
+while still being encapsulated, without needing void pointer arguments for arbitrary data.
 
 #### Example
 ```c++
@@ -128,7 +130,7 @@ public:
 ```
 
 ### Groups
-Systems often need to run in a determinstic order. Groups help facilitate that.
+Systems often need to run in a deterministic order. Groups help facilitate that.
 A Group will run systems placed in them, in the order placed, whenever the group is run.
 
 #### Example (using Raylib functions)
