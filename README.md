@@ -120,7 +120,7 @@ public:
     explicit gravity_system(entt::registry* registry) : super{registry} {}
     
     void update(float dt) const override {
-        for (auto&& [ent, vel] : registry.view<velocity>().each()) {
+        for (auto&& [ent, vel] : registry->view<velocity>().each()) {
             vel.y -= 9.8f * dt;
         }
     }
