@@ -1,4 +1,5 @@
 #pragma once
+#include "config/types.hpp"
 #include "entt/entt.hpp"
 
 namespace entt_ext
@@ -52,7 +53,7 @@ namespace entt_ext
             return *this;
         }
 
-        virtual void update(float delta_time) = 0;
+        virtual void update(float_type delta_time) = 0;
 
     protected:
         entt::registry* registry;

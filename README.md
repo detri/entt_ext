@@ -1,4 +1,6 @@
 # entt_ext - Unofficial EnTT Extensions
+
+## Why?
 This library adds some features to [EnTT](https://github.com/skypjack/entt) that I find useful,
 but may not necessarily meet the goals of the EnTT project, or are not a one-size-fits-all solution for a particular problem
 that you would expect from EnTT. Nonetheless, I hope this can be useful to others.
@@ -13,9 +15,21 @@ that you would expect from EnTT. Nonetheless, I hope this can be useful to other
 
 I recommend using git submodules with CMake. This project was designed for that paradigm.
 
+### Preprocessor vars (change before including entt_ext.hpp)
+```
+ENTT_EXT_FLOAT_TYPE float
+```
+
+### CMake Vars
+```
+# in the format VAR=DEFAULT
+ENTT_EXT_BUILD_TESTS=OFF
+ENTT_EXT_PROVIDE_ENTT=ON
+```
+
 #### Example
 ##### Shell
-Add the repo somewhere as a submodule in your own repo:
+Add the repo as a submodule in your own repo:
 ```shell
 $ cd myproject
 $ mkdir -p vendored && cd vendored
@@ -28,16 +42,16 @@ $ git submodule add https://github.com/detri/entt_ext
 project(myproject CXX)
 add_executable(myproject)
 
+# set(ENTT_EXT_PROVIDE_ENTT OFF CACHE BOOL "" FORCE)
+# add_subdirectory(vendored/entt)
+
 # Add entt_ext targets
 add_subdirectory(vendored/entt_ext)
-```
 
-entt_ext does not automatically link EnTT, it just makes use of its interfaces.
-However, the CMake file will fetch it and make it available by default:
-```cmake
-target_link_libraries(myproject PRIVATE EnTT::EnTT entt_ext)
+# Add include paths from entt_ext and EnTT to your project
+target_link_libraries(myproject INTERFACE entt_ext)
 ```
-You can provide the `EnTT::EnTT` target yourself by disabling `ENTT_EXT_PROVIDE_ENTT`.
+You can provide the `EnTT::EnTT` target for `entt_ext` to use yourself by disabling `ENTT_EXT_PROVIDE_ENTT`.
 
 ## Relationships
 
@@ -103,8 +117,26 @@ that don't use relationships. You may not want to uproot an existing registry ju
 You can add relational features by creating entities via temporarily wrapping a registry
 wherever needed, then query the children later with a different wrapper.
 
+To guarantee relationships function properly, please stick to these guidelines:
+
+1. **Always create and destroy relational entities via an entt_ext::relational_registry wrapper.**
+2. **Always update parent-child relationships via an entt_ext::relational_registry wrapper.**
+
+Non-relational components should be added through the wrapped registry.
+
+Destruction of parent entities via the wrapper will cascade to children.
+If you keep references to child entities, be sure to check them for validity.
+
 ## Systems and Groups
+
+### Philosophy
+
+- Games can host their data entirely out of an `EnTT` registry, which is usually created early and remains alive
+- Things that can't go in the registry via its context, as a component, or as a resource can be wrapped to do so
+- Thus, systems only need a registry pointer to do anything game-related
+
 ### Systems
+
 Systems take an alternate philosophy to `entt::process`.
 They are virtual classes with an overrideable `update` method which takes a `float`.
 The base constructor takes and stores a non-owning `entt::registry` pointer.

@@ -21,6 +21,7 @@ add_library(entt_ext INTERFACE)
 add_library(entt_ext::entt_ext ALIAS entt_ext)
 
 target_sources(entt_ext INTERFACE
+        $<BUILD_INTERFACE:${entt_ext_SOURCE_DIR}/src/config/types.hpp>
         $<BUILD_INTERFACE:${entt_ext_SOURCE_DIR}/src/relation/relationship.hpp>
         $<BUILD_INTERFACE:${entt_ext_SOURCE_DIR}/src/system/group.hpp>
         $<BUILD_INTERFACE:${entt_ext_SOURCE_DIR}/src/system/system.hpp>

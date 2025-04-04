@@ -1,6 +1,6 @@
 #pragma once
 #include "system.hpp"
-#include "entt/entt.hpp"
+#include "config/types.hpp"
 
 namespace entt_ext
 {
@@ -29,7 +29,7 @@ namespace entt_ext
          * Run all systems within this group in the order they were added
          * @param delta_time Amount of time passed since the last frame
          */
-        void update(const float delta_time) const
+        void update(const float_type delta_time) const
         {
             for (auto& sys : systems)
             {
